@@ -16,6 +16,7 @@ def bot_app_start(token):
                                        per_chat_id(), create_open,
                                        HutPizza, timeout=300),
                                ])
+    print "Bot started.........."
     MessageLoop(bot).run_as_thread()
 
 

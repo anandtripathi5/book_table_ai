@@ -82,7 +82,7 @@ class MessageCounter(telepot.helper.ChatHandler):
 
 bot = telepot.DelegatorBot("565019895:AAGnzpHExod-WhJ9EehCthnC_0XvgskQ46c", [
     pave_event_space()(
-        per_chat_id(), create_open, MessageCounter, timeout = 300),
+        per_chat_id(), create_open, MessageCounter, timeout=300),
 ])
 # timeout = 10
 MessageLoop(bot).run_as_thread()

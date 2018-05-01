@@ -18,6 +18,7 @@ def bot_app_start(token):
                                ])
     print "Bot started.........."
     MessageLoop(bot).run_as_thread()
+    # bot.message_loop(run_forever=True)
 
 
 # -------------------------------------------------------------

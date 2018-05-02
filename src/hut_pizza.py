@@ -28,7 +28,7 @@ class HutPizza(telepot.helper.ChatHandler):
         self.meal_type = ['Veg', 'Non Veg']
         self.confirm_booking_type = ["confirm_booking"]
         self.cancel_booking_type = ["cancel_booking"]
-        self.modify_booking_type = ["modify_booking"]
+        self.modify_booking_type = ["modify"]
         self.current_time_hour = int(
             datetime.fromtimestamp(int(time.time()), tz=None).strftime("%H"))
         self.is_user_greet = False
@@ -43,6 +43,7 @@ class HutPizza(telepot.helper.ChatHandler):
         self.book_table_number = ''
         self.user_email = ''
         self.confirm_booking = False
+        self.modify_booking = False
 
     def get_user_details(self, **kwargs):
         self.user_name = kwargs['from']['first_name']
@@ -81,8 +82,9 @@ class HutPizza(telepot.helper.ChatHandler):
             msg['text'] in self.guest_range or \
             msg['text'] in self.meal_type or \
             msg['text'] in self.confirm_booking_type or \
-            msg['text'] in self.cancel_booking_type or user_booking_time or \
-            user_email_address or user_phone_number:
+            msg['text'] in self.cancel_booking_type or \
+            msg['text'].lower() in self.modify_booking_type or \
+                user_booking_time or user_email_address or user_phone_number:
 
             # greet if already not greeted
             greet = "Hello "
@@ -192,6 +194,29 @@ class HutPizza(telepot.helper.ChatHandler):
                 self.confirm_booking = True
                 self.sender.sendMessage("Booking Confirmed")
 
+            if str(msg['text']).lower() in self.modify_booking_type:
+                self.modify_booking = True
+                keyboard = InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [InlineKeyboardButton(text='Phone Number',
+                                              callback_data='modifybooking-user_phone')],
+                        [InlineKeyboardButton(text='Email Address',
+                                              callback_data='modifybooking-user_email')],
+                        [InlineKeyboardButton(text='Table Type',
+                                              callback_data='modifybooking-book_table_type')],
+                        [InlineKeyboardButton(text='Number of Guests',
+                                              callback_data='modifybooking-book_table_number')],
+                        [InlineKeyboardButton(text='Booking Time',
+                                              callback_data='modifybooking-booking_time')],
+                        [InlineKeyboardButton(text='Meal Type',
+                                              callback_data='modifybooking-book_meal_type')]
+                    ]
+                )
+                self.sender.sendMessage(
+                    '{} Which choice you want to modify'.format(
+                        self.user_name),
+                    reply_markup=keyboard
+                )
             # messages to user
             if not self.book_meal_type:
                 keyboard = InlineKeyboardMarkup(
@@ -239,7 +264,7 @@ class HutPizza(telepot.helper.ChatHandler):
 
             elif self.book_table_number and self.book_table_type and \
                 self.user_phone and self.user_email and self.book_meal_type \
-                    and self.booking_time:
+                    and self.booking_time and not self.modify_booking:
                 data = "******************************\n\r Name : {}\n\r " \
                        "Phone : {}\n\r Email : {}\n\r Booking Table Type : " \
                        "{}\n\r Seating Capacity : {}\n\r Booking Time " \
@@ -268,10 +293,9 @@ class HutPizza(telepot.helper.ChatHandler):
                                 )
                             ],
                             [
-                                # TODO: modify booking
                                 InlineKeyboardButton(
                                     text='Modify Booking',
-                                    callback_data=self.cancel_booking_type[0]
+                                    callback_data=self.modify_booking_type[0]
                                 )
                             ],
                         ]
@@ -326,6 +350,12 @@ class HutPizza(telepot.helper.ChatHandler):
                 )
             )
 
+        elif self.modify_booking and msg['text'].split('-')[0] == 'modifybooking':
+            attr = msg['text'].split('-')[1]
+            setattr(self, attr, False)
+            self.modify_booking = False
+            self.sender.sendMessage("Enter New value")
+
         else:
             self.sender.sendMessage(
                 "Sorry Didn't get that, I am a bot so please corporate !"
@@ -337,6 +367,11 @@ class HutPizza(telepot.helper.ChatHandler):
             )
             self.sender.sendMessage(
                 "{} please type 'status' to get the status of booking".format(
+                    self.user_name
+                )
+            )
+            self.sender.sendMessage(
+                "{} please type 'modify' to modify any choice".format(
                     self.user_name
                 )
             )

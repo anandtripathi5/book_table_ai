@@ -5,8 +5,9 @@ from datetime import datetime
 import telepot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-from config import hotel_name
+from config import hotel_name, PROJECT_ID_DATASTORE
 from email_task import send_email
+from src.models import add_user, create_client
 
 
 class HutPizza(telepot.helper.ChatHandler):
@@ -42,8 +43,11 @@ class HutPizza(telepot.helper.ChatHandler):
         self.booking_time = ''
         self.book_table_number = ''
         self.user_email = ''
+        self.user_name, self.user_id, self.user_type, self.user_timestamp = \
+            [False]*4
         self.confirm_booking = False
         self.modify_booking = False
+        self.client = create_client(PROJECT_ID_DATASTORE)
 
     def get_user_details(self, **kwargs):
         self.user_name = kwargs['from']['first_name']
@@ -312,6 +316,18 @@ class HutPizza(telepot.helper.ChatHandler):
                     )
                     self.sender.sendMessage("Email Shot Successfully to: {}"
                                             "".format(self.user_email))
+                    add_user(
+                        self.client,
+                        user_id=self.user_id,
+                        name=self.user_name,
+                        email=self.user_email,
+                        created_on=self.user_timestamp,
+                        phone=self.user_phone,
+                        table_type=self.book_table_type,
+                        table_number=self.book_table_number,
+                        booking_time=self.booking_time,
+                        meal_type=self.book_meal_type
+                    )
                     self.confirm_booking = False
 
         elif str(msg['text']).lower() == 'help':

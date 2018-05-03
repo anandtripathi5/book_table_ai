@@ -8,7 +8,7 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 from config import hotel_name
 from constants import PHONE_NUMBER_SIZE, BOT_GREETINGS, \
-    TABLE_TYPE, MEAL_TYPE, REPLY_NOT_UNDERSTOOD, TEXT_CONTENT_TYPE
+    TABLE_TYPE, MEAL_TYPE, REPLY_NOT_UNDERSTOOD, TEXT_CONTENT_TYPE, IST
 from email_task import send_email
 from logger import log, function_logger
 from models import add_user, create_client, get_user
@@ -43,7 +43,7 @@ class HutPizza(telepot.helper.ChatHandler):
                                         ["cancel_booking"], \
                                        ["modify"]
         self.current_time_hour = int(
-            datetime.fromtimestamp(int(time.time()), tz=None).strftime("%H"))
+            datetime.fromtimestamp(int(time.time()), tz=IST).strftime("%H"))
         self.hotel_name = hotel_name
         self.guest_range = [str(guest_range) for guest_range in
                             range(1, 21)]
@@ -492,7 +492,7 @@ class HutPizza(telepot.helper.ChatHandler):
                 self.book_table_number_prompt()
             # booking time not set prompt user
             elif self.booking_time and int(
-                    self.booking_time.split(":")[0]) <= datetime.now().hour:
+                    self.booking_time.split(":")[0]) <= datetime.now(tz=IST).hour:
                 self.booking_time = ''
                 self.sender.sendMessage(
                     "Booking Time Cannot Be Current Time Or Time In Past, "

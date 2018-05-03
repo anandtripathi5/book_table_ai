@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pytz
 PHONE_NUMBER_SIZE = 10
 BOT_GREETINGS = ['hey', 'hello', '/start', 'hi', 'howdy',
                     'hows is it going?', 'yes', 'no',
@@ -16,3 +17,4 @@ REPLY_NOT_UNDERSTOOD = ['sorry, I did not understand that.',
                         "customer's discretion is advised",
                         "Ha ha, you don't know that I am a bot"]
 TEXT_CONTENT_TYPE = 'text'
+IST = pytz.timezone("Asia/Calcutta")

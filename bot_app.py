@@ -7,6 +7,7 @@ from telepot.loop import MessageLoop
 
 from config import telegram_bot_token
 from src.hut_pizza import HutPizza
+from src.logger import log
 
 
 def bot_app_start(token):
@@ -16,9 +17,8 @@ def bot_app_start(token):
                                        per_chat_id(), create_open,
                                        HutPizza, timeout=300),
                                ])
-    print "Bot started.........."
+    log.info("Bot started..........")
     MessageLoop(bot).run_as_thread()
-    # bot.message_loop(run_forever=True)
 
 
 # -------------------------------------------------------------

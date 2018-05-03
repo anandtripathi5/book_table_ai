@@ -2,8 +2,10 @@
 from mailin import Mailin
 
 from config import SEND_IN_BLUE_API_KEY, EMAIL_FROM_ADDRESS
+from logger import function_logger, log
 
 
+@function_logger(log)
 def send_email(email_address, user_name, data):
         m = Mailin("https://api.sendinblue.com/v2.0", SEND_IN_BLUE_API_KEY)
         data = {"to": {email_address: user_name},
@@ -439,3 +441,30 @@ Phone: 555.555.5555</div>
         response = m.send_email(data)
         print response
         return True
+
+    # def send_mail(self, recipient, data):
+    #     if recipient:
+    #         mail = smtplib.SMTP(self.smtp_server, self.smtp_port)
+    #         login = self.smtp_email
+    #         _pass = self.smtp_pass
+    #         subject = 'Booking Confirmation Receipt From %s' % (
+    #         self.hotel_name)
+    #         _from = '"Booking Agent Bot" <%s>' % (login)
+    #         mail.ehlo()
+    #         mail.starttls()
+    #         mail.login(login, _pass)
+    #         subject = str(subject)
+    #         reply_to = _from
+    #         preamble = subject
+    #         html = data
+    #         html_content = MIMEText(html, 'html')
+    #         msg = MIMEMultipart('alternative')
+    #         msg['Subject'] = subject
+    #         msg['From'] = _from
+    #         msg['Reply-to'] = _from
+    #         msg['To'] = recipient
+    #         self.log.info("Sending Email To : %s" % (recipient))
+    #         msg.attach(html_content)
+    #         mail.sendmail(_from, recipient, msg.as_string())
+    #         self.log.info("Email Sent : %s" % (recipient))
+    #         mail.close()

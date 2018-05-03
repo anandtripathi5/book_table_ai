@@ -2,7 +2,7 @@
 import smtplib
 from email_template import email_content, email_content_part_2
 from config import EMAIL_FROM_ADDRESS, SMTP_USER_NAME, \
-        SMTP_PASSWORD
+        SMTP_PASSWORD, SMTP_HOST_NAME
 from logger import log, function_logger
 import email
 
@@ -17,7 +17,7 @@ def send_email(email_address, name, body):
         msg.add_header('Content-Type', 'text/html')
         msg.set_payload(email_content + body + email_content_part_2)
         try:
-                server = smtplib.SMTP("smtp.gmail.com:587")
+                server = smtplib.SMTP(SMTP_HOST_NAME)
                 server.ehlo()
                 server.starttls()
                 server.login(SMTP_USER_NAME, SMTP_PASSWORD)

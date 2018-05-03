@@ -6,7 +6,7 @@ from datetime import datetime
 import telepot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-from config import hotel_name, PROJECT_ID_DATASTORE
+from config import hotel_name
 from constants import PHONE_NUMBER_SIZE, BOT_GREETINGS, \
     TABLE_TYPE, MEAL_TYPE, REPLY_NOT_UNDERSTOOD, TEXT_CONTENT_TYPE
 from email_task import send_email
@@ -30,7 +30,7 @@ class HutPizza(telepot.helper.ChatHandler):
             self.returning_user = [False] * 15
 
         self.__set_seed_data_for_comparison()
-        self.client = create_client(PROJECT_ID_DATASTORE)
+        self.client = create_client()
         self.get_user_details(**args[0][1])
 
     @function_logger(log)

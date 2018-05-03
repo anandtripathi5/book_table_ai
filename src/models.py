@@ -3,8 +3,9 @@ from google.cloud import datastore
 from logger import function_logger, log
 
 
-def create_client(project_id):
+def create_client():
     return datastore.Client.from_service_account_json('scripts/client.json')
+
 
 @function_logger(log)
 def add_user(client, **kwargs):

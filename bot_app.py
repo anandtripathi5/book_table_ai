@@ -4,10 +4,12 @@ import telepot
 import time
 from telepot.delegate import pave_event_space, per_chat_id, create_open
 from telepot.loop import MessageLoop
-
+import sys
 from config import telegram_bot_token
 from src.hut_pizza import HutPizza
 from src.logger import log
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 def bot_app_start(token):
